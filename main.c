@@ -142,13 +142,13 @@ tJogo PosicaoInicial(tJogo jogo);
 tJogo FantasmasBateramNaParede(tJogo jogo);
 tJogo MoveFantasmas(tJogo jogo);
 int Morreu(tJogo jogo, tPosicao pos); 
-void ExibeEstadoJogo(tJogo jogo, char diretorio[]);
+void ExibeEstadoJogo(tJogo jogo);
 int GameOver(tJogo jogo);
 int Venceu(tJogo jogo);
 tJogo Come(tJogo jogo);
 tJogo RealizaJogada(tJogo jogo);
 tJogo Passou(tJogo jogo, int y, int x);
-void ExibeEstadoFinal(tJogo jogo, char diretorio[]);
+void ExibeEstadoFinal(tJogo jogo);
 
 // FUNÇÕES PRINCIPAIS:
 
@@ -170,7 +170,7 @@ int main(int argc, char * argv[])
     }
 
     sprintf(entrada, "%s/mapa.txt", argv[1]);
-    sprintf(saida, "%s/saida1", argv[1]);
+    sprintf(saida, "%s/saida", argv[1]);
 
     jogo = Inicializar(jogo, entrada, saida);
     jogo = RealizarJogo(jogo, saida);
@@ -933,64 +933,64 @@ tJogo FantasmasBateramNaParede(tJogo jogo) {
     return jogo;
 }
 
-void ExibeEstadoJogo(tJogo jogo, char diretorio[]) {
-    FILE * pFile;
-    char saida[1000];
-    sprintf(saida, "%s/saida.txt", diretorio);
-    pFile = fopen(saida, "a");
+void ExibeEstadoJogo(tJogo jogo) {
+    //FILE * pFile;
+    //char saida[1000];
+    //sprintf(saida, "%s/saida.txt", diretorio);
+    //pFile = fopen(saida, "a");
 
     printf("Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
-    fprintf(pFile, "Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
+    //fprintf(pFile, "Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
     int i = 0, j = 0;
     for (i = 0; i < jogo.mapa.linhas; i++) {
         for (j = 0; j < jogo.mapa.colunas; j++) {
             if ((i == jogo.fantasmas[0].posicao.pos_y) && (j == jogo.fantasmas[0].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[0]))) {
                 printf("%c", jogo.fantasmas[0].id);
-                fprintf(pFile, "%c", jogo.fantasmas[0].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[0].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[1].posicao.pos_y) && (j == jogo.fantasmas[1].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[1]))) {
                 printf("%c", jogo.fantasmas[1].id);
-                fprintf(pFile, "%c", jogo.fantasmas[1].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[1].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[2].posicao.pos_y) && (j == jogo.fantasmas[2].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[2]))) {
                 printf("%c", jogo.fantasmas[2].id);
-                fprintf(pFile, "%c", jogo.fantasmas[2].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[2].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[3].posicao.pos_y) && (j == jogo.fantasmas[3].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[3]))) {
                 printf("%c", jogo.fantasmas[3].id);
-                fprintf(pFile, "%c", jogo.fantasmas[3].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[3].id);
                 continue;
             }
 
             else if ((i == jogo.jogador.posicao.pos_y) && (j == jogo.jogador.posicao.pos_x)) {
                 printf(">");
-                fprintf(pFile, ">");
+                //fprintf(pFile, ">");
                 continue;
             }
 
             else if (jogo.mapa.celulas[i][j].ativo) {
                 printf("%c", PegaCelula(jogo.mapa, i, j));
-                fprintf(pFile, "%c", PegaCelula(jogo.mapa, i, j));
+                //fprintf(pFile, "%c", PegaCelula(jogo.mapa, i, j));
             }
 
             else if (!(jogo.mapa.celulas[i][j].ativo)) {
                 printf(" ");
-                fprintf(pFile, " ");
+                //fprintf(pFile, " ");
             }
         }
         printf("\n");
-        fprintf(pFile, "\n");
+        //fprintf(pFile, "\n");
     }
-    fprintf(pFile, "Pontuacao: %d\n\n", jogo.jogador.pontos);
+    //fprintf(pFile, "Pontuacao: %d\n\n", jogo.jogador.pontos);
     printf("Pontuacao: %d\n\n", jogo.jogador.pontos);
 
-    fclose(pFile);
+    //fclose(pFile);
 
     return;
 }
@@ -1076,58 +1076,58 @@ tJogo RealizaJogada(tJogo jogo) {
     return jogo;
 }
 
-void ExibeEstadoFinal(tJogo jogo, char diretorio[]) {
-    FILE * pFile;
-    char saida[1000];
-    sprintf(saida, "%s/saida.txt", diretorio);
-    pFile = fopen(saida, "a");
+void ExibeEstadoFinal(tJogo jogo) {
+    //FILE * pFile;
+    //char saida[1000];
+    //sprintf(saida, "%s/saida.txt", diretorio);
+    //pFile = fopen(saida, "a");
 
     printf("Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
-    fprintf(pFile, "Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
+    //fprintf(pFile, "Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
     int i = 0, j = 0;
     for (i = 0; i < jogo.mapa.linhas; i++) {
         for (j = 0; j < jogo.mapa.colunas; j++) {
             if ((i == jogo.fantasmas[0].posicao.pos_y) && (j == jogo.fantasmas[0].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[0]))) {
                 printf("%c", jogo.fantasmas[0].id);
-                fprintf(pFile, "%c", jogo.fantasmas[0].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[0].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[1].posicao.pos_y) && (j == jogo.fantasmas[1].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[1]))) {
                 printf("%c", jogo.fantasmas[1].id);
-                fprintf(pFile, "%c", jogo.fantasmas[1].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[1].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[2].posicao.pos_y) && (j == jogo.fantasmas[2].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[2]))) {
                 printf("%c", jogo.fantasmas[2].id);
-                fprintf(pFile, "%c", jogo.fantasmas[2].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[2].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[3].posicao.pos_y) && (j == jogo.fantasmas[3].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[3]))) {
                 printf("%c", jogo.fantasmas[3].id);
-                fprintf(pFile, "%c", jogo.fantasmas[3].id);
+                //fprintf(pFile, "%c", jogo.fantasmas[3].id);
                 continue;
             }
 
             else if (jogo.mapa.celulas[i][j].ativo) {
                 printf("%c", PegaCelula(jogo.mapa, i, j));
-                fprintf(pFile, "%c", PegaCelula(jogo.mapa, i, j));
+                //fprintf(pFile, "%c", PegaCelula(jogo.mapa, i, j));
             }
 
             else if (!(jogo.mapa.celulas[i][j].ativo)) {
                 printf(" ");
-                fprintf(pFile, " ");
+                //fprintf(pFile, " ");
             }
         }
         printf("\n");
-        fprintf(pFile, "\n");
+        //fprintf(pFile, "\n");
     }
-    fprintf(pFile, "Pontuacao: %d\n\n", jogo.jogador.pontos);
+    //fprintf(pFile, "Pontuacao: %d\n\n", jogo.jogador.pontos);
     printf("Pontuacao: %d\n\n", jogo.jogador.pontos);
 
-    fclose(pFile);
+    //fclose(pFile);
     
     return;
 }
@@ -1162,10 +1162,10 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
         if ((jogo.GameOver == 2) || GameOver(jogo)) {
             jogo.jogador.n_de_jogadas++;
             if (jogo.GameOver == 2) {
-                ExibeEstadoFinal(jogo, diretorio);
+                ExibeEstadoFinal(jogo);
             }
             else if (GameOver(jogo)) {
-                ExibeEstadoJogo(jogo, diretorio);
+                ExibeEstadoJogo(jogo);
             }
             printf("Game over!\nPontuação final: %d\n", jogo.jogador.pontos);
             return jogo;
@@ -1173,7 +1173,7 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
 
         jogo = Come(jogo);
         jogo.jogador.n_de_jogadas++;
-        ExibeEstadoJogo(jogo, diretorio);
+        ExibeEstadoJogo(jogo);
     }
     
     if (i == jogo.mapa.lim_movs) {
@@ -1197,10 +1197,11 @@ void GeraResumo(tJogo jogo, char diretorio[]) {
     else if (Comeu(jogo.jogador, jogo.mapa)) {
         fprintf(pFile, "Movimento %d (%c) pegou comida\n", jogo.jogador.n_de_jogadas+1, jogada);
     }
-
-    else if (Colidiu(jogo.jogador) == 1) {
+    if (Colidiu(jogo.jogador) == 1) {
         fprintf(pFile, "Movimento %d (%c) colidiu na parede\n", jogo.jogador.n_de_jogadas+1, jogada);
     }
+
+
 
     fclose(pFile);
 
