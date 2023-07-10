@@ -1151,7 +1151,7 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
     for (i = 0; i < jogo.mapa.lim_movs; i++) {
         jogo.GameOver = 0;
         if (Venceu(jogo)) {
-            printf("Voce venceu!\nPontuação final: %d\n", jogo.jogador.pontos);
+            printf("Voce venceu!\nPontuacao final: %d\n", jogo.jogador.pontos);
             break;
         }
         jogo = FantasmasBateramNaParede(jogo);
@@ -1167,7 +1167,7 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
             else if (GameOver(jogo)) {
                 ExibeEstadoJogo(jogo);
             }
-            printf("Game over!\nPontuação final: %d\n", jogo.jogador.pontos);
+            printf("Game over!\nPontuacao final: %d\n", jogo.jogador.pontos);
             return jogo;
         }
 
@@ -1177,7 +1177,7 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
     }
     
     if (i == jogo.mapa.lim_movs) {
-        printf("Game over!\nPontuação final: %d\n", jogo.jogador.pontos);
+        printf("Game over!\nPontuacao final: %d\n", jogo.jogador.pontos);
     }
     return jogo;
 }
