@@ -6,5 +6,9 @@ Movimento 19 (a) pegou comida
 Movimento 20 (a) pegou comida
 Movimento 21 (a) pegou comida
 Movimento 22 (a) pegou comida
-Movimento 40 (a) fim de jogo por encostar em um fantasma
-Movimento 40 (a) colidiu na parede
+Movimento 43 (a) pegou comida
+Movimento 44 (a) pegou comida
+Movimento 45 (a) pegou comida
+Movimento 46 (a) pegou comida
+Movimento 47 (a) pegou comida
+Movimento 48 (a) pegou comida

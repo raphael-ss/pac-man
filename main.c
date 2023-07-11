@@ -21,6 +21,7 @@ typedef struct {
     char id;
     int colidiu;
     int comeu;
+    int colidiu_em_tunel;
 } tJogada;
 
 typedef struct {
@@ -354,6 +355,7 @@ tJogo PosicaoInicial(tJogo jogo) {
                     jogo.jogador.jogadas[aux].id = '\0';
                     jogo.jogador.jogadas[aux].comeu = 0;
                     jogo.jogador.jogadas[aux].colidiu = 0;
+                    jogo.jogador.jogadas[aux].colidiu_em_tunel = 0;
                 }
             }
 
@@ -425,34 +427,34 @@ tJogador LeJogada(tJogador jogador) {
 tJogador ExecutaJogada(tJogador jogador, char jogada, tMapa mapa) {
     int x = jogador.posicao.pos_x;
     int y = jogador.posicao.pos_y;
-// NAO FOR PAREDE OU TUNEL
-    if (jogada == 'w' && ((mapa.celulas[y-1][x].id != '#')/* && (mapa.celulas[y-1][x].id != '@')*/)) {
+
+    if (jogada == 'w' && ((mapa.celulas[y-1][x].id != '#'))) {
         jogador = MoveCima(jogador);
     }
 
-    else if (jogada == 'a' && ((mapa.celulas[y][x-1].id != '#')/* && (mapa.celulas[y][x-1].id != '@')*/)) {
+    else if (jogada == 'a' && ((mapa.celulas[y][x-1].id != '#'))) {
         jogador = MoveEsquerda(jogador);
     }
 
-    else if (jogada == 's' && ((mapa.celulas[y+1][x].id != '#')/* && (mapa.celulas[y+1][x].id != '@')*/)) {
+    else if (jogada == 's' && ((mapa.celulas[y+1][x].id != '#'))) {
         jogador = MoveBaixo(jogador);
     }
 
-    else if (jogada == 'd' && ((mapa.celulas[y][x+1].id != '#') /*&& (mapa.celulas[y][x+1].id != '@')*/)) {
+    else if (jogada == 'd' && ((mapa.celulas[y][x+1].id != '#'))) {
         jogador = MoveDireita(jogador);
     }
 
-    /*else if ((mapa.celulas[y-1][x].id == '@') || (mapa.celulas[y+1][x].id == '@') || (mapa.celulas[y][x+1].id == '@') || (mapa.celulas[y][x-1].id == '@')) {
-        jogador.em_tunel = 1;
-        return jogador;
-    }*/
-
     else {
+        if (EncimaDeTunel(jogador, mapa)) {
+            jogador.em_tunel = 1;
+            jogador.jogadas[jogador.n_de_jogadas].colidiu_em_tunel = 1;  
+            return jogador;
+        }
+        
         jogador.colidiu = 1;
-        jogador.jogadas[jogador.n_de_jogadas].colidiu = 1;
+        jogador.jogadas[jogador.n_de_jogadas].colidiu = 1;    
+        
     }
-
-    
     return jogador;
 }
 
@@ -525,6 +527,9 @@ int ColisoesTotais(tJogador jogador) {
     int i = 0, cont = 0;
     for (i = 0; i < jogador.n_de_jogadas; i++) {
         if (jogador.jogadas[i].colidiu) {
+            cont++;
+        }
+        else if (jogador.jogadas[i].colidiu_em_tunel) {
             cont++;
         }
     }
@@ -1154,10 +1159,44 @@ void ExibeEstadoFinal(tJogo jogo) {
 tJogo TeleportaJogador(tJogo jogo) {
     tPosicao pos_tunel;
     tPosicao pos_outro_tunel;
+    tPosicao pos_jogador = PegaPosicaoAtual(jogo.jogador);
+    char jogada = PegaUltimaJogada(jogo.jogador);
 
-    pos_tunel = PegaPosicaoAtual(jogo.jogador);
-    pos_outro_tunel = PegaOutroTunel(jogo.mapa, pos_tunel.pos_y, pos_tunel.pos_x);
-    jogo.jogador.posicao = pos_outro_tunel;
+    if (jogada == 'w' && ((PegaCelula(jogo.mapa, pos_jogador.pos_y, pos_jogador.pos_x) == '@'))) {
+        jogo = Passou(jogo, pos_jogador.pos_y, pos_jogador.pos_x);
+        pos_tunel = PegaPosicaoAtual(jogo.jogador);
+        pos_outro_tunel = PegaOutroTunel(jogo.mapa, pos_tunel.pos_y, pos_tunel.pos_x);
+        jogo.jogador.posicao = pos_outro_tunel;
+        jogo = Passou(jogo, pos_outro_tunel.pos_y, pos_outro_tunel.pos_x);
+        return jogo;
+    }
+
+    else if (jogada == 'a' && ((PegaCelula(jogo.mapa, pos_jogador.pos_y, pos_jogador.pos_x) == '@'))) {
+        jogo = Passou(jogo, pos_jogador.pos_y, pos_jogador.pos_x);
+        pos_tunel = PegaPosicaoAtual(jogo.jogador);
+        pos_outro_tunel = PegaOutroTunel(jogo.mapa, pos_tunel.pos_y, pos_tunel.pos_x);
+        jogo.jogador.posicao = pos_outro_tunel;
+        jogo = Passou(jogo, pos_outro_tunel.pos_y, pos_outro_tunel.pos_x);
+        return jogo;
+    }
+
+    else if (jogada == 's' && ((PegaCelula(jogo.mapa, pos_jogador.pos_y, pos_jogador.pos_x) == '@'))) {
+        jogo = Passou(jogo, pos_jogador.pos_y, pos_jogador.pos_x);
+        pos_tunel = PegaPosicaoAtual(jogo.jogador);
+        pos_outro_tunel = PegaOutroTunel(jogo.mapa, pos_tunel.pos_y, pos_tunel.pos_x);
+        jogo.jogador.posicao = pos_outro_tunel;
+        jogo = Passou(jogo, pos_outro_tunel.pos_y, pos_outro_tunel.pos_x);
+        return jogo;
+    }
+
+    else if (jogada == 'd' && ((PegaCelula(jogo.mapa, pos_jogador.pos_y, pos_jogador.pos_x) == '@'))) {
+        jogo = Passou(jogo, pos_jogador.pos_y, pos_jogador.pos_x);
+        pos_tunel = PegaPosicaoAtual(jogo.jogador);
+        pos_outro_tunel = PegaOutroTunel(jogo.mapa, pos_tunel.pos_y, pos_tunel.pos_x);
+        jogo.jogador.posicao = pos_outro_tunel;
+        jogo = Passou(jogo, pos_outro_tunel.pos_y, pos_outro_tunel.pos_x);
+        return jogo;
+    }
 
     return jogo;
 }
@@ -1184,12 +1223,12 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
             printf("Voce venceu!\nPontuacao final: %d\n", jogo.jogador.pontos);
             break;
         }
-        jogo = TeleportaJogador(jogo);
         jogo = FantasmasBateramNaParede(jogo);
         jogo = MoveFantasmas(jogo);
         jogo.jogador.colidiu = 0;
         //jogo.jogador.em_tunel = 0;
         jogo = RealizaJogada(jogo);
+        jogo = TeleportaJogador(jogo);
         GeraResumo(jogo, diretorio);
         if ((jogo.GameOver == 2) || GameOver(jogo)) {
             jogo.jogador.n_de_jogadas++;
@@ -1205,7 +1244,6 @@ tJogo RealizarJogo(tJogo jogo, char diretorio[]) {
 
         jogo = Come(jogo);
         jogo.jogador.n_de_jogadas++;
-        //jogo = TeleportaJogador(jogo);
         ExibeEstadoJogo(jogo);
     }
     

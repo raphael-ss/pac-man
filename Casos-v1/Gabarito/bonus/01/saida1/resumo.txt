@@ -1,9 +1,0 @@
-Movimento 8 (d) pegou comida
-Movimento 9 (d) pegou comida
-Movimento 10 (d) pegou comida
-Movimento 18 (a) pegou comida
-Movimento 19 (a) pegou comida
-Movimento 20 (a) pegou comida
-Movimento 21 (a) pegou comida
-Movimento 22 (a) pegou comida
-Movimento 38 (d) fim de jogo por encostar em um fantasma
