@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+        ALUNO: RAPHAEL SUAREZ
+        TOTAL DE FUNCOES: 68
+        TOTAL DE STRUCTS: 9 
+*/
+
 #define LINHAS 40
 #define COLUNAS 100
 #define MAX_JOGADAS 3000
@@ -11,6 +17,10 @@ typedef struct {
 } tPosicao;
 
 typedef struct {
+    /*
+        SUBSTITUIMOS UMA MATRIZ DE CARACTERES POR UMA MATRIZ DE CELULAS, 
+        QUE SAO CAPAZES DE ARMAZENAR MAIS INFORMACOES ACERCA DO JOGO;
+    */
     tPosicao posicao;
     char id;
     int ativo;
@@ -18,6 +28,10 @@ typedef struct {
 } tCelula;
 
 typedef struct {
+    /*
+        ASSIM COMO CELULAS, CRIAMOS UM TIPO JOGADA PARA ARMAZENAR INFORMACOES 
+        EXTRA SOBRE O JOGO;
+    */
     char id;
     int colidiu;
     int comeu;
@@ -36,13 +50,14 @@ typedef struct {
 typedef struct {
     char id;
     tPosicao posicao;
-    int direcao;
+    // 0 PARA NAO MUDOU O SENTIDO, 1 PARA MUDOU O SENTIDO
+    int direcao; 
     int ativo;
 } tFantasma;
 
 typedef struct {
-    int linhas; //horizontal
-    int colunas; //vertical
+    int linhas; 
+    int colunas; 
     int lim_movs;
     tCelula celulas[LINHAS][COLUNAS];
     int paredes, tuneis, comidas, fantasmas; 
@@ -53,6 +68,7 @@ typedef struct {
     tMapa mapa;
     tJogador jogador;
     tFantasma fantasmas[4];
+    // GameOver FLAG
     int GameOver;
 } tJogo;
     
@@ -80,34 +96,34 @@ tPosicao PegaPosicaoAtual(tJogador jogador);
 tPosicao PegaPosicaoPassadaFantasma(tFantasma fantasma);
 int MesmaPosicao(tPosicao pos1, tPosicao pos2);
 int FantasmaNaPosicaoPassada(tFantasma fantasmas[], tJogador jogador);
+tPosicao PegaOutroTunel(tMapa mapa, int y, int x);
 
 // Funcoes do tipo tRank e tRanking
 tRank DefineRank(char id, int comidas, int colisoes, int movs);
 tRanking OrdenaRanking(tRanking ranking);
 void ImprimeRanking(tRanking ranking, char diretorio[]);
 
-// Funcoes do tipo tJogada e tJogadas
+// Funcoes do tipo tJogada
 int Colisoes(tJogador jogador, char id);
 int Comidas(tJogador jogador, char id);
 int MovsTotais(tJogador jogador, char id);
 int MovsSemPontuar(tJogador jogador);
 int ColisoesTotais(tJogador jogador);
+char PegaUltimaJogada(tJogador jogador);
+char PegaJogada(tJogador jogador, int i);
 
-// Funções do tipo tJogador
+// Funcoes do tipo tJogador
 tJogador MoveCima(tJogador jogador); // W
+tJogador MoveEsquerda(tJogador jogador); // A
 tJogador MoveBaixo(tJogador jogador); // S
 tJogador MoveDireita(tJogador jogador); // D
-tJogador MoveEsquerda(tJogador jogador); // A
 tJogador LeJogada(tJogador jogador);
 tJogador ExecutaJogada(tJogador jogador, char jogada, tMapa mapa);
 int Comeu(tJogador jogador, tMapa mapa);
 int Colidiu(tJogador jogador);
-char PegaUltimaJogada(tJogador jogador);
-char PegaJogada(tJogador jogador, int i);
 int EncimaDeTunel(tJogador jogador, tMapa mapa);
 
-// Funções do tipo tFantasma
-
+// Funcoes do tipo tFantasma
 int FantasmaAtivo(tFantasma fantasma);
 
 tFantasma InicializaB(tFantasma fantasma, int pos_y, int pos_x);
@@ -125,20 +141,20 @@ tFantasma MoveP(tFantasma fantasma);
 tFantasma MoveI(tFantasma fantasma);
 tFantasma MoveC(tFantasma fantasma);
 
+int FantasmaBSobreComida(tMapa mapa, tFantasma fantasma);
+int FantasmaPSobreComida(tMapa mapa, tFantasma fantasma);
+int FantasmaISobreComida(tMapa mapa, tFantasma fantasma);
+int FantasmaCSobreComida(tMapa mapa, tFantasma fantasma);
+
 tFantasma DesativaFantasma(tFantasma fantasma);
 
 // Funções do tipo tMapa:
 tMapa LeMapa(char diretorio[]);
 void ImprimeMapa(tJogo jogo, char diretorio[]);
-int FantasmaBSobreComida(tMapa mapa, tFantasma fantasma);
-int FantasmaPSobreComida(tMapa mapa, tFantasma fantasma);
-int FantasmaISobreComida(tMapa mapa, tFantasma fantasma);
-int FantasmaCSobreComida(tMapa mapa, tFantasma fantasma);
 tMapa ZeraMapa(tMapa mapa);
-tMapa ContaCelulas(tMapa mapa); // qtd de cada coisa
+tMapa ContaCelulas(tMapa mapa); 
 char PegaCelula(tMapa mapa, int y, int x);
 tMapa DefineCelula(tMapa mapa, int y, int x, char cel);
-tPosicao PegaOutroTunel(tMapa mapa, int y, int x);
 
 // Funções do Jogo
 tJogo PosicaoInicial(tJogo jogo);
@@ -155,7 +171,6 @@ void ExibeEstadoFinal(tJogo jogo);
 tJogo TeleportaJogador(tJogo jogo);
 
 // FUNÇÕES PRINCIPAIS:
-
 tJogo Inicializar(tJogo jogo, char entrada[], char saida[]);
 tJogo RealizarJogo(tJogo jogo, char diretorio[]);
 void GeraResumo(tJogo jogo, char diretorio[]);
@@ -173,7 +188,7 @@ int main(int argc, char * argv[])
         exit(1);
     }
     sprintf(entrada, "%s/mapa.txt", argv[1]);
-    sprintf(saida, "%s/saida1", argv[1]);
+    sprintf(saida, "%s/saida", argv[1]);
 
     jogo = Inicializar(jogo, entrada, saida);
     jogo = RealizarJogo(jogo, saida);
@@ -185,41 +200,39 @@ int main(int argc, char * argv[])
 }
 
 /*
-    Funções do tipo tJogador abaixo:
+    FUNCOES DO TIPO tPosicao ABAIXO:
 */
 
-
-
-int FantasmaNaPosicaoPassada(tFantasma fantasmas[], tJogador jogador) {
-    if (FantasmaAtivo(fantasmas[0])) {
-        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[0]))) {
-            return 1;
-        }
+tPosicao PegaPosicaoPassada(tJogador jogador) {
+    tPosicao pos;
+    if (PegaUltimaJogada(jogador) == 'w') {
+        pos.pos_x = jogador.posicao.pos_x;
+        pos.pos_y = jogador.posicao.pos_y+1;
+        return pos;
     }
-    if (FantasmaAtivo(fantasmas[1])) {
-        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[1]))) {
-            return 1;
-        }
+    else if (PegaUltimaJogada(jogador) == 'a') {
+        pos.pos_x = jogador.posicao.pos_x+1;
+        pos.pos_y = jogador.posicao.pos_y;
+        return pos;
     }
-    if (FantasmaAtivo(fantasmas[2])) {
-        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[2]))) {
-            return 1;
-        }
+    else if (PegaUltimaJogada(jogador) == 's') {
+        pos.pos_x = jogador.posicao.pos_x;
+        pos.pos_y = jogador.posicao.pos_y-1;
+        return pos;
     }
-    if (FantasmaAtivo(fantasmas[3])) {
-        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[3]))) {
-            return 1;
-        }
+    else if (PegaUltimaJogada(jogador) == 'd') {
+        pos.pos_x = jogador.posicao.pos_x-1;
+        pos.pos_y = jogador.posicao.pos_y;
+        return pos;
     }
-
-    return 0;
+    
 }
 
-int MesmaPosicao(tPosicao pos1, tPosicao pos2) {
-    if ((pos1.pos_x == pos2.pos_x) && (pos1.pos_y == pos2.pos_y)) {
-        return 1;
-    }
-    return 0;
+tPosicao PegaPosicaoAtual(tJogador jogador) {
+    tPosicao pos;
+    pos.pos_x = jogador.posicao.pos_x;
+    pos.pos_y = jogador.posicao.pos_y;
+    return pos;
 }
 
 tPosicao PegaPosicaoPassadaFantasma(tFantasma fantasma) {
@@ -274,210 +287,140 @@ tPosicao PegaPosicaoPassadaFantasma(tFantasma fantasma) {
     }
 }
 
-tPosicao PegaPosicaoPassada(tJogador jogador) {
-    tPosicao pos;
-    if (PegaUltimaJogada(jogador) == 'w') {
-        pos.pos_x = jogador.posicao.pos_x;
-        pos.pos_y = jogador.posicao.pos_y+1;
-        return pos;
-    }
-    else if (PegaUltimaJogada(jogador) == 'a') {
-        pos.pos_x = jogador.posicao.pos_x+1;
-        pos.pos_y = jogador.posicao.pos_y;
-        return pos;
-    }
-    else if (PegaUltimaJogada(jogador) == 's') {
-        pos.pos_x = jogador.posicao.pos_x;
-        pos.pos_y = jogador.posicao.pos_y-1;
-        return pos;
-    }
-    else if (PegaUltimaJogada(jogador) == 'd') {
-        pos.pos_x = jogador.posicao.pos_x-1;
-        pos.pos_y = jogador.posicao.pos_y;
-        return pos;
-    }
-    
-}
-
-tPosicao PegaPosicaoAtual(tJogador jogador) {
-    tPosicao pos;
-    pos.pos_x = jogador.posicao.pos_x;
-    pos.pos_y = jogador.posicao.pos_y;
-    return pos;
-}
-
-tMapa DefineCelula(tMapa mapa, int y, int x, char cel) {
-    mapa.celulas[y][x].id = cel;
-    return mapa;
-}
-
-char PegaCelula(tMapa mapa, int y, int x) {
-    return mapa.celulas[y][x].id;
-    }
-
-char PegaUltimaJogada(tJogador jogador) {
-    return jogador.jogadas[jogador.n_de_jogadas].id;
-}
-
-char PegaJogada(tJogador jogador, int i) {
-    return jogador.jogadas[i].id;
-}
-
-tFantasma DesativaFantasma(tFantasma fantasma) {
-    fantasma.ativo = 0;
-    return fantasma;
-}
-
-tJogo PosicaoInicial(tJogo jogo) {
-    int i = 0, j = 0, aux = 0;
-    tJogador jogador;
-
-    jogo.fantasmas[0] = DesativaFantasma(jogo.fantasmas[0]);
-    jogo.fantasmas[1] = DesativaFantasma(jogo.fantasmas[1]);
-    jogo.fantasmas[2] = DesativaFantasma(jogo.fantasmas[2]);
-    jogo.fantasmas[3] = DesativaFantasma(jogo.fantasmas[3]);
-
-    for (i = 0; i < jogo.mapa.linhas; i++) {
-        for (j = 0; j < jogo.mapa.colunas; j++) {
-            if (PegaCelula(jogo.mapa, i, j) == '>') {
-
-                jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
-                jogo.mapa.celulas[i][j].ativo = 0;
-                jogo.mapa.celulas[i][j].passou = -100;
-
-                jogo.jogador.posicao.pos_x = j;
-                jogo.jogador.posicao.pos_y = i;
-
-                jogo.jogador.pontos =  0;
-                jogo.jogador.em_tunel = 0;
-
-                for (aux = 0; aux < 3000; aux++) {
-                    jogo.jogador.jogadas[aux].id = '\0';
-                    jogo.jogador.jogadas[aux].comeu = 0;
-                    jogo.jogador.jogadas[aux].colidiu = 0;
-                    jogo.jogador.jogadas[aux].colidiu_em_tunel = 0;
-                }
-            }
-
-            else if ((PegaCelula(jogo.mapa, i, j) == 'B') || (PegaCelula(jogo.mapa, i, j) == 'P') || (PegaCelula(jogo.mapa, i, j) == 'I') || (PegaCelula(jogo.mapa, i, j) == 'C')) {
-                if (PegaCelula(jogo.mapa, i, j) == 'B') {
-
-                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
-                    jogo.mapa.celulas[i][j].ativo = 0;
-
-                    jogo.fantasmas[0] = InicializaB(jogo.fantasmas[0], i, j);
-                }
-
-                else if (PegaCelula(jogo.mapa, i, j) == 'P') {
-
-                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
-                    jogo.mapa.celulas[i][j].ativo = 0;
-
-                    jogo.fantasmas[1] = InicializaP(jogo.fantasmas[1], i, j);
-                }
-
-                else if (PegaCelula(jogo.mapa, i, j) == 'I') {
-
-                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
-                    jogo.mapa.celulas[i][j].ativo = 0;
-
-                    jogo.fantasmas[2] = InicializaI(jogo.fantasmas[2], i, j);
-                }
-
-                else if (PegaCelula(jogo.mapa, i, j) == 'C') {
-
-                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
-                    jogo.mapa.celulas[i][j].ativo = 0;
-
-                    jogo.fantasmas[3] = InicializaC(jogo.fantasmas[3], i, j);
-                }
-            }
-        }
-        
-    }
-    return jogo;
-}
-
-tJogador MoveCima(tJogador jogador) {
-    jogador.posicao.pos_y -= 1;
-    return jogador;
-}
-
-tJogador MoveBaixo(tJogador jogador) {
-    jogador.posicao.pos_y += 1;
-    return jogador;
-}
-
-tJogador MoveDireita(tJogador jogador) {
-    jogador.posicao.pos_x += 1;
-    return jogador;
-}
-
-tJogador MoveEsquerda(tJogador jogador) {
-    jogador.posicao.pos_x -= 1;
-    return jogador;
-}
-
-tJogador LeJogada(tJogador jogador) {
-    scanf("%*[^wasd]");
-    scanf("%c", &jogador.jogadas[jogador.n_de_jogadas].id);
-    return jogador;
-}
-
-tJogador ExecutaJogada(tJogador jogador, char jogada, tMapa mapa) {
-    int x = jogador.posicao.pos_x;
-    int y = jogador.posicao.pos_y;
-
-    if (jogada == 'w' && ((mapa.celulas[y-1][x].id != '#'))) {
-        jogador = MoveCima(jogador);
-    }
-
-    else if (jogada == 'a' && ((mapa.celulas[y][x-1].id != '#'))) {
-        jogador = MoveEsquerda(jogador);
-    }
-
-    else if (jogada == 's' && ((mapa.celulas[y+1][x].id != '#'))) {
-        jogador = MoveBaixo(jogador);
-    }
-
-    else if (jogada == 'd' && ((mapa.celulas[y][x+1].id != '#'))) {
-        jogador = MoveDireita(jogador);
-    }
-
-    else {
-        if (EncimaDeTunel(jogador, mapa)) {
-            jogador.em_tunel = 1;
-            jogador.jogadas[jogador.n_de_jogadas].colidiu_em_tunel = 1;  
-            return jogador;
-        }
-        
-        jogador.colidiu = 1;
-        jogador.jogadas[jogador.n_de_jogadas].colidiu = 1;    
-        
-    }
-    return jogador;
-}
-
-int Comeu(tJogador jogador, tMapa mapa) {
-    int x, y;
-    x = jogador.posicao.pos_x;
-    y = jogador.posicao.pos_y;
-
-    // Se o Pac-Man passar encima da comida, aumente sua pontuação e desative a comida;
-
-    if ((mapa.celulas[y][x].id == '*') && (mapa.celulas[y][x].ativo)) {
+int MesmaPosicao(tPosicao pos1, tPosicao pos2) {
+    if ((pos1.pos_x == pos2.pos_x) && (pos1.pos_y == pos2.pos_y)) {
         return 1;
     }
+    return 0;
+}
 
-    //jogador.jogadas[jogador.n_de_jogadas].comeu++;
+int FantasmaNaPosicaoPassada(tFantasma fantasmas[], tJogador jogador) {
+    if (FantasmaAtivo(fantasmas[0])) {
+        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[0]))) {
+            return 1;
+        }
+    }
+    if (FantasmaAtivo(fantasmas[1])) {
+        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[1]))) {
+            return 1;
+        }
+    }
+    if (FantasmaAtivo(fantasmas[2])) {
+        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[2]))) {
+            return 1;
+        }
+    }
+    if (FantasmaAtivo(fantasmas[3])) {
+        if (MesmaPosicao(PegaPosicaoAtual(jogador), PegaPosicaoPassadaFantasma(fantasmas[3]))) {
+            return 1;
+        }
+    }
 
     return 0;
-
 }
 
-int Colidiu(tJogador jogador) {
-    return jogador.colidiu;
+tPosicao PegaOutroTunel(tMapa mapa, int y, int x) {
+    int i = 0, j = 0;
+    tPosicao pos;
+    for (i = 0; i < mapa.linhas; i++) {
+        for (j = 0; j < mapa.colunas; j++) {
+            if ((i == y) && (j == x)) {
+                continue;
+            }
+            else if (PegaCelula(mapa, i, j) == '@') {
+                pos.pos_x = j;
+                pos.pos_y = i;
+                return pos;
+            }
+        }
+    }
+    printf("Nao achei o outro tunel );\n");
+    exit(1);
 }
+
+/*
+    FUNCOES DO TIPO tRank E tRanking ABAIXO:
+*/
+
+tRank DefineRank(char id, int comidas, int colisoes, int movs) {
+    tRank rank;
+    rank.id = id;
+    rank.comidas = comidas;
+    rank.colisoes = colisoes;
+    rank.movs = movs;
+    return rank;
+}
+
+tRanking OrdenaRanking(tRanking ranking) {
+    int i = 0, sorted = 1;
+    tRank aux;
+    while (sorted != 4) {
+        sorted = 1;
+        for (i = 1; i < 4; i++) {
+            // se a proxima for maior, troque
+            if (ranking.rank[i-1].comidas < ranking.rank[i].comidas) {
+                aux = ranking.rank[i-1];
+                ranking.rank[i-1] = ranking.rank[i];
+                ranking.rank[i] = aux;
+            }
+            else if (ranking.rank[i-1].comidas == ranking.rank[i].comidas) {
+                if (ranking.rank[i-1].colisoes > ranking.rank[i].colisoes) {
+                    aux = ranking.rank[i-1];
+                    ranking.rank[i-1] = ranking.rank[i];
+                    ranking.rank[i] = aux;
+                }
+                else if (ranking.rank[i-1].colisoes == ranking.rank[i].colisoes) {
+                    if (ranking.rank[i-1].movs < ranking.rank[i].movs) {
+                        aux = ranking.rank[i-1];
+                        ranking.rank[i-1] = ranking.rank[i];
+                        ranking.rank[i] = aux;
+                    }
+                    else if (ranking.rank[i-1].movs == ranking.rank[i].movs) {
+                        if (ranking.rank[i-1].id > ranking.rank[i].id) {
+                            aux = ranking.rank[i-1];
+                            ranking.rank[i-1] = ranking.rank[i];
+                            ranking.rank[i] = aux;
+                        }
+                        else {
+                            sorted++;
+                            continue;
+                        }
+                    }
+                    else {
+                        sorted++;
+                        continue;
+                    }
+                }
+                else {
+                    sorted++;
+                    continue;
+                }
+            }
+            else {
+                sorted++;
+                continue;
+            }
+        }
+    }
+    return ranking;
+}
+
+void ImprimeRanking(tRanking ranking, char diretorio[]) {
+    FILE * pFile;
+    char saida[1000];
+    sprintf(saida, "%s/ranking.txt", diretorio);
+    pFile = fopen(saida, "w");
+    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[0].id, ranking.rank[0].comidas, ranking.rank[0].colisoes, ranking.rank[0].movs);
+    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[1].id, ranking.rank[1].comidas, ranking.rank[1].colisoes, ranking.rank[1].movs);
+    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[2].id, ranking.rank[2].comidas, ranking.rank[2].colisoes, ranking.rank[2].movs);
+    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[3].id, ranking.rank[3].comidas, ranking.rank[3].colisoes, ranking.rank[3].movs);
+    fclose(pFile);
+    return;
+}
+
+/*
+    FUNCOES DO TIPO tJogada ABAIXO:
+*/
 
 int Colisoes(tJogador jogador, char id) {
     int i = 0, cont = 0;
@@ -536,6 +479,96 @@ int ColisoesTotais(tJogador jogador) {
     return cont;
 }
 
+char PegaUltimaJogada(tJogador jogador) {
+    return jogador.jogadas[jogador.n_de_jogadas].id;
+}
+
+char PegaJogada(tJogador jogador, int i) {
+    return jogador.jogadas[i].id;
+}
+
+/*
+    FUNCOES DO TIPO tJogador ABAIXO:
+*/
+
+tJogador MoveCima(tJogador jogador) {
+    jogador.posicao.pos_y -= 1;
+    return jogador;
+}
+
+tJogador MoveEsquerda(tJogador jogador) {
+    jogador.posicao.pos_x -= 1;
+    return jogador;
+}
+
+tJogador MoveBaixo(tJogador jogador) {
+    jogador.posicao.pos_y += 1;
+    return jogador;
+}
+
+tJogador MoveDireita(tJogador jogador) {
+    jogador.posicao.pos_x += 1;
+    return jogador;
+}
+
+tJogador LeJogada(tJogador jogador) {
+    scanf("%*[^wasd]");
+    scanf("%c", &jogador.jogadas[jogador.n_de_jogadas].id);
+    return jogador;
+}
+
+tJogador ExecutaJogada(tJogador jogador, char jogada, tMapa mapa) {
+    int x = jogador.posicao.pos_x;
+    int y = jogador.posicao.pos_y;
+
+    if (jogada == 'w' && ((mapa.celulas[y-1][x].id != '#'))) {
+        jogador = MoveCima(jogador);
+    }
+
+    else if (jogada == 'a' && ((mapa.celulas[y][x-1].id != '#'))) {
+        jogador = MoveEsquerda(jogador);
+    }
+
+    else if (jogada == 's' && ((mapa.celulas[y+1][x].id != '#'))) {
+        jogador = MoveBaixo(jogador);
+    }
+
+    else if (jogada == 'd' && ((mapa.celulas[y][x+1].id != '#'))) {
+        jogador = MoveDireita(jogador);
+    }
+
+    else {
+        // FLAG PARA SINALIZAR TELEPORTE
+        if (EncimaDeTunel(jogador, mapa)) {
+            jogador.em_tunel = 1;
+            jogador.jogadas[jogador.n_de_jogadas].colidiu_em_tunel = 1;  
+            return jogador;
+        }
+        
+        jogador.colidiu = 1;
+        jogador.jogadas[jogador.n_de_jogadas].colidiu = 1;    
+        
+    }
+    return jogador;
+}
+
+int Comeu(tJogador jogador, tMapa mapa) {
+    tPosicao pos = PegaPosicaoAtual(jogador);
+    int x = pos.pos_x;
+    int y = pos.pos_y;
+
+    // Se o Pac-Man passar encima da comida, aumente sua pontuação e desative a comida;
+    if ((PegaCelula(mapa, y, x) == '*') && (mapa.celulas[y][x].ativo)) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int Colidiu(tJogador jogador) {
+    return jogador.colidiu;
+}
+
 int EncimaDeTunel(tJogador jogador, tMapa mapa) {
     tPosicao pos = PegaPosicaoAtual(jogador);
     if (PegaCelula(mapa, pos.pos_y, pos.pos_x) == '@') {
@@ -545,8 +578,13 @@ int EncimaDeTunel(tJogador jogador, tMapa mapa) {
 }
 
 /*
-    Funções do tipo tFantasma abaixo:
+    FUNCOES DO TIPO tFantasma ABAIXO:
 */
+
+int FantasmaAtivo(tFantasma fantasma){
+    return fantasma.ativo;
+
+}
 
 tFantasma InicializaB(tFantasma fantasma, int pos_y, int pos_x) {
     fantasma.ativo = 1;
@@ -584,11 +622,6 @@ tFantasma InicializaC(tFantasma fantasma, int pos_y, int pos_x) {
     return fantasma;
 }
 
-int FantasmaAtivo(tFantasma fantasma){
-    return fantasma.ativo;
-
-}
-
 tFantasma MudouDirecaoB(tFantasma fantasma, tMapa mapa) {
     // se B estiver ativo
     if (FantasmaAtivo(fantasma)) {
@@ -596,7 +629,7 @@ tFantasma MudouDirecaoB(tFantasma fantasma, tMapa mapa) {
         if (fantasma.direcao == 1) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
-            if (mapa.celulas[y][x+1].id == '#') {
+            if (PegaCelula(mapa, y, x+1) == '#') {
                 fantasma.direcao = 0;
             }
         }
@@ -604,7 +637,7 @@ tFantasma MudouDirecaoB(tFantasma fantasma, tMapa mapa) {
         else if (fantasma.direcao == 0) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
-            if (mapa.celulas[y][x-1].id == '#') {
+            if (PegaCelula(mapa, y, x-1) == '#') {
                 fantasma.direcao = 1;
             }
         }
@@ -620,7 +653,7 @@ tFantasma MudouDirecaoP(tFantasma fantasma, tMapa mapa) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
             // se o próximo for parede
-            if (mapa.celulas[y+1][x].id == '#') {
+            if (PegaCelula(mapa, y+1, x) == '#') {
                 fantasma.direcao = 0;           
             }
         }
@@ -629,7 +662,7 @@ tFantasma MudouDirecaoP(tFantasma fantasma, tMapa mapa) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
             // se o próximo for parede
-            if (mapa.celulas[y-1][x].id == '#') {
+            if (PegaCelula(mapa, y-1, x) == '#') {
                 fantasma.direcao = 1;              
             }
         }
@@ -645,7 +678,7 @@ tFantasma MudouDirecaoI(tFantasma fantasma, tMapa mapa) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
             // se o próximo for parede
-            if (mapa.celulas[y-1][x].id == '#') {
+            if (PegaCelula(mapa, y-1, x) == '#') {
                 fantasma.direcao = 0;
             }
         }
@@ -654,7 +687,7 @@ tFantasma MudouDirecaoI(tFantasma fantasma, tMapa mapa) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
             // se o próximo for parede
-            if (mapa.celulas[y+1][x].id == '#') {
+            if (PegaCelula(mapa, y+1, x) == '#') {
                 fantasma.direcao = 1;
             }
         }
@@ -670,7 +703,7 @@ tFantasma MudouDirecaoC(tFantasma fantasma, tMapa mapa) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
             // se o próximo for parede
-            if (mapa.celulas[y][x-1].id == '#') {
+            if (PegaCelula(mapa, y, x-1) == '#') {
                 fantasma.direcao = 0;
             }
         }
@@ -679,7 +712,7 @@ tFantasma MudouDirecaoC(tFantasma fantasma, tMapa mapa) {
             int x = fantasma.posicao.pos_x;
             int y = fantasma.posicao.pos_y;
             // se o próximo for parede
-            if (mapa.celulas[y][x+1].id == '#') {
+            if (PegaCelula(mapa, y, x+1) == '#') {
                 fantasma.direcao = 1;
             }
         }
@@ -688,7 +721,6 @@ tFantasma MudouDirecaoC(tFantasma fantasma, tMapa mapa) {
 }
 
 tFantasma MoveB(tFantasma fantasma) {
-
     if (FantasmaAtivo(fantasma)) {
 
        if (fantasma.direcao == 1) {
@@ -703,7 +735,6 @@ tFantasma MoveB(tFantasma fantasma) {
 }
 
 tFantasma MoveP(tFantasma fantasma) {
-
     if (FantasmaAtivo(fantasma)) {
 
        if (fantasma.direcao == 1) {
@@ -718,7 +749,6 @@ tFantasma MoveP(tFantasma fantasma) {
 }
 
 tFantasma MoveI(tFantasma fantasma) {
-
     if (FantasmaAtivo(fantasma)) {
 
        if (fantasma.direcao == 1) {
@@ -733,7 +763,6 @@ tFantasma MoveI(tFantasma fantasma) {
 }
 
 tFantasma MoveC(tFantasma fantasma) {
-
     if (FantasmaAtivo(fantasma)) {
 
        if (fantasma.direcao == 1) {
@@ -747,28 +776,71 @@ tFantasma MoveC(tFantasma fantasma) {
     return fantasma;
 }
 
-/*
-    Funções do Tipo tMapa abaixo:
-*/
+int FantasmaBSobreComida(tMapa mapa, tFantasma fantasma) {
+    if (FantasmaAtivo(fantasma)) {
+        int x = fantasma.posicao.pos_x;
+        int y = fantasma.posicao.pos_y;
 
-tPosicao PegaOutroTunel(tMapa mapa, int y, int x) {
-    int i = 0, j = 0;
-    tPosicao pos;
-    for (i = 0; i < mapa.linhas; i++) {
-        for (j = 0; j < mapa.colunas; j++) {
-            if ((i == y) && (j == x)) {
-                continue;
-            }
-            else if (PegaCelula(mapa, i, j) == '@') {
-                pos.pos_x = j;
-                pos.pos_y = i;
-                return pos;
-            }
+        if (PegaCelula(mapa, y, x) == '*') {
+            return 1;
         }
     }
-    printf("Nao achei o outro tunel );\n");
-    exit(1);
+    return 0;
 }
+
+int FantasmaPSobreComida(tMapa mapa, tFantasma fantasma) {
+    if (FantasmaAtivo(fantasma)) {
+        int x = fantasma.posicao.pos_x;
+        int y = fantasma.posicao.pos_y;
+
+        if (PegaCelula(mapa, y, x) == '*') {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int FantasmaISobreComida(tMapa mapa, tFantasma fantasma) {
+    if (FantasmaAtivo(fantasma)) {
+        int x = fantasma.posicao.pos_x;
+        int y = fantasma.posicao.pos_y;
+
+        if (PegaCelula(mapa, y, x) == '*') {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int FantasmaCSobreComida(tMapa mapa, tFantasma fantasma) {
+    if (FantasmaAtivo(fantasma)) {
+        int x = fantasma.posicao.pos_x;
+        int y = fantasma.posicao.pos_y;
+
+        if (PegaCelula(mapa, y, x) == '*') {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+tFantasma DesativaFantasma(tFantasma fantasma) {
+    fantasma.ativo = 0;
+    return fantasma;
+}
+
+/*
+    FUNCOES DO TIPO tMapa ABAIXO:
+*/
+
+tMapa DefineCelula(tMapa mapa, int y, int x, char cel) {
+    mapa.celulas[y][x].id = cel;
+    return mapa;
+}
+
+char PegaCelula(tMapa mapa, int y, int x) {
+    return mapa.celulas[y][x].id;
+    }
 
 tMapa LeMapa(char diretorio[]) {
     FILE * pFile;
@@ -852,54 +924,6 @@ void ImprimeMapa(tJogo jogo, char diretorio[]) {
     return;
 }
 
-int FantasmaBSobreComida(tMapa mapa, tFantasma fantasma) {
-    if (FantasmaAtivo(fantasma)) {
-        int x = fantasma.posicao.pos_x;
-        int y = fantasma.posicao.pos_y;
-
-        if (mapa.celulas[y][x].id == '*') {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int FantasmaPSobreComida(tMapa mapa, tFantasma fantasma) {
-    if (FantasmaAtivo(fantasma)) {
-        int x = fantasma.posicao.pos_x;
-        int y = fantasma.posicao.pos_y;
-
-        if (mapa.celulas[y][x].id == '*') {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int FantasmaISobreComida(tMapa mapa, tFantasma fantasma) {
-    if (FantasmaAtivo(fantasma)) {
-        int x = fantasma.posicao.pos_x;
-        int y = fantasma.posicao.pos_y;
-
-        if (mapa.celulas[y][x].id == '*') {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int FantasmaCSobreComida(tMapa mapa, tFantasma fantasma) {
-    if (FantasmaAtivo(fantasma)) {
-        int x = fantasma.posicao.pos_x;
-        int y = fantasma.posicao.pos_y;
-
-        if (mapa.celulas[y][x].id == '*') {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 tMapa ZeraMapa(tMapa mapa) {
     int i = 0, j = 0;
     mapa.comidas = 0;
@@ -942,9 +966,87 @@ tMapa ContaCelulas(tMapa mapa) {
 }
 
 /*
-    Funções do tipo tJogo abaixo:
+    FUNCOES DO TIPO tJogo ABAIXO:
 */
+
+tJogo PosicaoInicial(tJogo jogo) {
+    int i = 0, j = 0, aux = 0;
+    tJogador jogador;
+
+    /*
+        DEFINE A POSICAO INICIAL DOS FANTASMAS, DO JOGADOR E DAS CELULAS.
+        ZERA TODAS AS FLAGS E ATRIBUTOS, E REMOVE O PAC-MAN E FANTASMAS DO MAPA,
+        POSSIBILITANDO O MOVIMENTO SEM SE PREOCUPAR COM ESPAÇOS.
+    */
+
+    jogo.fantasmas[0] = DesativaFantasma(jogo.fantasmas[0]);
+    jogo.fantasmas[1] = DesativaFantasma(jogo.fantasmas[1]);
+    jogo.fantasmas[2] = DesativaFantasma(jogo.fantasmas[2]);
+    jogo.fantasmas[3] = DesativaFantasma(jogo.fantasmas[3]);
+
+    for (i = 0; i < jogo.mapa.linhas; i++) {
+        for (j = 0; j < jogo.mapa.colunas; j++) {
+            if (PegaCelula(jogo.mapa, i, j) == '>') {
+
+                jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
+                jogo.mapa.celulas[i][j].ativo = 0;
+                jogo.mapa.celulas[i][j].passou = -100;
+
+                jogo.jogador.posicao.pos_x = j;
+                jogo.jogador.posicao.pos_y = i;
+
+                jogo.jogador.pontos =  0;
+                jogo.jogador.em_tunel = 0;
+
+                for (aux = 0; aux < 3000; aux++) {
+                    jogo.jogador.jogadas[aux].id = '\0';
+                    jogo.jogador.jogadas[aux].comeu = 0;
+                    jogo.jogador.jogadas[aux].colidiu = 0;
+                    jogo.jogador.jogadas[aux].colidiu_em_tunel = 0;
+                }
+            }
+
+            else if ((PegaCelula(jogo.mapa, i, j) == 'B') || (PegaCelula(jogo.mapa, i, j) == 'P') || (PegaCelula(jogo.mapa, i, j) == 'I') || (PegaCelula(jogo.mapa, i, j) == 'C')) {
+                if (PegaCelula(jogo.mapa, i, j) == 'B') {
+
+                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
+                    jogo.mapa.celulas[i][j].ativo = 0;
+
+                    jogo.fantasmas[0] = InicializaB(jogo.fantasmas[0], i, j);
+                }
+
+                else if (PegaCelula(jogo.mapa, i, j) == 'P') {
+
+                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
+                    jogo.mapa.celulas[i][j].ativo = 0;
+
+                    jogo.fantasmas[1] = InicializaP(jogo.fantasmas[1], i, j);
+                }
+
+                else if (PegaCelula(jogo.mapa, i, j) == 'I') {
+
+                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
+                    jogo.mapa.celulas[i][j].ativo = 0;
+
+                    jogo.fantasmas[2] = InicializaI(jogo.fantasmas[2], i, j);
+                }
+
+                else if (PegaCelula(jogo.mapa, i, j) == 'C') {
+
+                    jogo.mapa = DefineCelula(jogo.mapa, i, j, '\0');
+                    jogo.mapa.celulas[i][j].ativo = 0;
+
+                    jogo.fantasmas[3] = InicializaC(jogo.fantasmas[3], i, j);
+                }
+            }
+        }
+        
+    }
+    return jogo;
+}
+
 tJogo Passou(tJogo jogo, int y, int x) {
+    // ATRIBUA O NUMERO DA ULTIMA JOGADA A CELULA ONDE O JOGADOR PASSOU
     jogo.mapa.celulas[y][x].passou = jogo.jogador.n_de_jogadas+1;
     return jogo;
 }
@@ -954,15 +1056,12 @@ tJogo Come(tJogo jogo) {
     pos = PegaPosicaoAtual(jogo.jogador);
 
     // Se o Pac-Man passar encima da comida, aumente sua pontuação e desative a comida;
-
-    //if ((PegaCelula(jogo.mapa, pos.pos_y, pos.pos_x) == '*') && (jogo.mapa.celulas[pos.pos_y][pos.pos_x].ativo) && (!GameOver(jogo))) {
     if (Comeu(jogo.jogador, jogo.mapa)) {
         jogo.jogador.pontos++;
         jogo.mapa.celulas[pos.pos_y][pos.pos_x].ativo = 0;
         jogo.jogador.jogadas[jogo.jogador.n_de_jogadas].comeu = 1;
         return jogo;
     }
-
     jogo.jogador.jogadas[jogo.jogador.n_de_jogadas].comeu = 0;
 
     return jogo;
@@ -977,9 +1076,7 @@ tJogo FantasmasBateramNaParede(tJogo jogo) {
 }
 
 void ExibeEstadoJogo(tJogo jogo) {
-
     printf("Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
-    //fprintf(pFile, "Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
     int i = 0, j = 0;
     for (i = 0; i < jogo.mapa.linhas; i++) {
         for (j = 0; j < jogo.mapa.colunas; j++) {
@@ -1019,14 +1116,11 @@ void ExibeEstadoJogo(tJogo jogo) {
         printf("\n");
     }
     printf("Pontuacao: %d\n\n", jogo.jogador.pontos);
-
-
     return;
 }
 
 int Morreu(tJogo jogo, tPosicao pos) {
-
-    if (((pos.pos_x == jogo.fantasmas[0].posicao.pos_x) && FantasmaAtivo(jogo.fantasmas[0]))) {
+    if (((pos.pos_x == jogo.fantasmas[0].posicao.pos_x)  && FantasmaAtivo(jogo.fantasmas[0]))) {
         if (pos.pos_y == jogo.fantasmas[0].posicao.pos_y) {
             return 1;
         }
@@ -1049,7 +1143,6 @@ int Morreu(tJogo jogo, tPosicao pos) {
             return 1;
         }
     }
-
     return 0;
 }
 
@@ -1058,11 +1151,9 @@ int GameOver(tJogo jogo) {
         return 1;
     }
     return 0;
-
 }
 
 tJogo MoveFantasmas(tJogo jogo) {
-// fazer move B e substituir por espaço
     jogo = FantasmasBateramNaParede(jogo);
 
     jogo.fantasmas[0] = MoveB(jogo.fantasmas[0]);
@@ -1071,6 +1162,8 @@ tJogo MoveFantasmas(tJogo jogo) {
     jogo.fantasmas[3] = MoveC(jogo.fantasmas[3]);
 
     if (Morreu(jogo, PegaPosicaoAtual(jogo.jogador))) {
+        // SE APOS OS FANTASMAS SE MOVIMENTAREM, PAC-MAN MORREU POR COLISAO COM FANTASMA, 
+        // AUMENTE A FLAG DE GAMEOVER.
         jogo.GameOver += 1;
     }
     return jogo;
@@ -1089,6 +1182,9 @@ tJogo RealizaJogada(tJogo jogo) {
     char jogada = PegaUltimaJogada(jogo.jogador);
     jogo.jogador = ExecutaJogada(jogo.jogador, jogada, jogo.mapa);
     if (Morreu(jogo, PegaPosicaoPassada(jogo.jogador)) && (FantasmaNaPosicaoPassada(jogo.fantasmas, jogo.jogador))) {
+        // SE O FANTASMA ESTA NA POSICAO PASSADA DO JOGADOR, E O JOGADOR NA POSICAO PASSADA DO FANTASMA, 
+        // HOUVE UMA TROCA DE POSICAO ENTRE AMBOS. PORTANTO, PAC-MAN COLIDIU E MORREU. 
+        // AUMENTE A FLAG EM 1, O QUE SOMARA PARA 2
         jogo.GameOver += 1;
         return jogo;
     }
@@ -1101,62 +1197,47 @@ tJogo RealizaJogada(tJogo jogo) {
 }
 
 void ExibeEstadoFinal(tJogo jogo) {
-    //FILE * pFile;
-    //char saida[1000];
-    //sprintf(saida, "%s/saida.txt", diretorio);
-    //pFile = fopen(saida, "a");
-
+    // EXIBA O MAPA SEM O PAC-MAN
     printf("Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
-    //fprintf(pFile, "Estado do jogo apos o movimento '%c':\n", jogo.jogador.jogadas[jogo.jogador.n_de_jogadas-1].id);
     int i = 0, j = 0;
     for (i = 0; i < jogo.mapa.linhas; i++) {
         for (j = 0; j < jogo.mapa.colunas; j++) {
             if ((i == jogo.fantasmas[0].posicao.pos_y) && (j == jogo.fantasmas[0].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[0]))) {
                 printf("%c", jogo.fantasmas[0].id);
-                //fprintf(pFile, "%c", jogo.fantasmas[0].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[1].posicao.pos_y) && (j == jogo.fantasmas[1].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[1]))) {
                 printf("%c", jogo.fantasmas[1].id);
-                //fprintf(pFile, "%c", jogo.fantasmas[1].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[2].posicao.pos_y) && (j == jogo.fantasmas[2].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[2]))) {
                 printf("%c", jogo.fantasmas[2].id);
-                //fprintf(pFile, "%c", jogo.fantasmas[2].id);
                 continue;
             }
 
             else if ((i == jogo.fantasmas[3].posicao.pos_y) && (j == jogo.fantasmas[3].posicao.pos_x) && (FantasmaAtivo(jogo.fantasmas[3]))) {
                 printf("%c", jogo.fantasmas[3].id);
-                //fprintf(pFile, "%c", jogo.fantasmas[3].id);
                 continue;
             }
 
             else if (jogo.mapa.celulas[i][j].ativo) {
                 printf("%c", PegaCelula(jogo.mapa, i, j));
-                //fprintf(pFile, "%c", PegaCelula(jogo.mapa, i, j));
             }
 
             else if (!(jogo.mapa.celulas[i][j].ativo)) {
                 printf(" ");
-                //fprintf(pFile, " ");
             }
         }
         printf("\n");
-        //fprintf(pFile, "\n");
     }
-    //fprintf(pFile, "Pontuacao: %d\n\n", jogo.jogador.pontos);
     printf("Pontuacao: %d\n\n", jogo.jogador.pontos);
-
-    //fclose(pFile);
-    
     return;
 }
 
 tJogo TeleportaJogador(tJogo jogo) {
+    // SE O JOGADOR ENTRAR NO TUNEL, TROQUE A POSICAO DELE PARA A POSICAO DO OUTRO TUNEL
     tPosicao pos_tunel;
     tPosicao pos_outro_tunel;
     tPosicao pos_jogador = PegaPosicaoAtual(jogo.jogador);
@@ -1202,7 +1283,7 @@ tJogo TeleportaJogador(tJogo jogo) {
 }
 
 /*
-    Funções Principais:
+    FUNCOES PRINCIPAIS:
 */
 
 tJogo Inicializar(tJogo jogo, char entrada[], char saida[]) {
@@ -1261,6 +1342,7 @@ void GeraResumo(tJogo jogo, char diretorio[]) {
     sprintf(saida, "%s/resumo.txt", diretorio);
     pFile = fopen(saida, "a");
 
+    // SE O PAC-MAN MORREU POR COLISAO OU TROCA DE POSICAO COM FANTASMA
     if ((jogo.GameOver == 2) || (GameOver(jogo))) {
         fprintf(pFile, "Movimento %d (%c) fim de jogo por encostar em um fantasma\n", jogo.jogador.n_de_jogadas+1, jogada);
     }
@@ -1276,82 +1358,6 @@ void GeraResumo(tJogo jogo, char diretorio[]) {
 
     fclose(pFile);
 
-    return;
-}
-
-tRank DefineRank(char id, int comidas, int colisoes, int movs) {
-    tRank rank;
-    rank.id = id;
-    rank.comidas = comidas;
-    rank.colisoes = colisoes;
-    rank.movs = movs;
-    return rank;
-}
-
-tRanking OrdenaRanking(tRanking ranking) {
-    int i = 0, sorted = 1;
-    tRank aux;
-    while (sorted != 4) {
-        sorted = 1;
-        for (i = 1; i < 4; i++) {
-            // se a proxima for maior, troque
-            if (ranking.rank[i-1].comidas < ranking.rank[i].comidas) {
-                aux = ranking.rank[i-1];
-                ranking.rank[i-1] = ranking.rank[i];
-                ranking.rank[i] = aux;
-            }
-            else if (ranking.rank[i-1].comidas == ranking.rank[i].comidas) {
-                if (ranking.rank[i-1].colisoes > ranking.rank[i].colisoes) {
-                    aux = ranking.rank[i-1];
-                    ranking.rank[i-1] = ranking.rank[i];
-                    ranking.rank[i] = aux;
-                }
-                else if (ranking.rank[i-1].colisoes == ranking.rank[i].colisoes) {
-                    if (ranking.rank[i-1].movs < ranking.rank[i].movs) {
-                        aux = ranking.rank[i-1];
-                        ranking.rank[i-1] = ranking.rank[i];
-                        ranking.rank[i] = aux;
-                    }
-                    else if (ranking.rank[i-1].movs == ranking.rank[i].movs) {
-                        if (ranking.rank[i-1].id > ranking.rank[i].id) {
-                            aux = ranking.rank[i-1];
-                            ranking.rank[i-1] = ranking.rank[i];
-                            ranking.rank[i] = aux;
-                        }
-                        else {
-                            sorted++;
-                            continue;
-                        }
-                    }
-                    else {
-                        sorted++;
-                        continue;
-                    }
-                }
-                else {
-                    sorted++;
-                    continue;
-                }
-            }
-            else {
-                sorted++;
-                continue;
-            }
-        }
-    }
-    return ranking;
-}
-
-void ImprimeRanking(tRanking ranking, char diretorio[]) {
-    FILE * pFile;
-    char saida[1000];
-    sprintf(saida, "%s/ranking.txt", diretorio);
-    pFile = fopen(saida, "w");
-    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[0].id, ranking.rank[0].comidas, ranking.rank[0].colisoes, ranking.rank[0].movs);
-    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[1].id, ranking.rank[1].comidas, ranking.rank[1].colisoes, ranking.rank[1].movs);
-    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[2].id, ranking.rank[2].comidas, ranking.rank[2].colisoes, ranking.rank[2].movs);
-    fprintf(pFile, "%c,%d,%d,%d\n", ranking.rank[3].id, ranking.rank[3].comidas, ranking.rank[3].colisoes, ranking.rank[3].movs);
-    fclose(pFile);
     return;
 }
 
